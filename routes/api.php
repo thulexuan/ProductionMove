@@ -17,3 +17,5 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+use App\Http\Controllers\AdminController;
+Route::get('admin/viewAllProducts', [AdminController::class, 'view_all_products']);

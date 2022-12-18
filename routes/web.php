@@ -12,7 +12,15 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
-
-Route::get('/', function () {
-    return view('welcome');
+use App\Http\Controllers\AdminController;
+Route::prefix('admin')->group(function() {
+    Route::get('adminHome', [AdminController::class, 'index']);
+    Route::get('produce-acc', [AdminController::class, 'produce_acc']);
+    Route::get('view-products', [AdminController::class, 'view_products']);
 });
+Route::get('/', function() {
+    return view('formtest');
+});
+
+Route::get('get-form', [AdminController::class, 'getForm']);
+Route::post('handle-form', [AdminController::class, 'handleRequest']);
