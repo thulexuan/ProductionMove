@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('product_code')->primary();
             $table->string('product_line');
             $table->string('brand');
+            $table->string('product_name');
             $table->string('status');
             $table->string('factory_code')->nullable();
             $table->string('store_code')->nullable();

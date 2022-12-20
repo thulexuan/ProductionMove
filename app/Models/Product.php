@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Product extends Model
 {
     use HasFactory;
-    /*
+    
     protected $fillable = [
         'product_code',
         'product_name',
@@ -32,5 +32,5 @@ class Product extends Model
     public function warranty_center()
     {
         return $this->belongsTo('App\Models\Warranty_Center');
-    }*/
+    }
 }
