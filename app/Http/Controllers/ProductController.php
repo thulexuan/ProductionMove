@@ -9,6 +9,7 @@ use App\Models\ProductLine;
 
 class ProductController extends Controller
 {
+    // Xem các dòng sản phẩm 
     public function view_product_lines() {
         $product_lines = ProductLine::all();
         foreach ($product_lines as $product_line) {
@@ -21,6 +22,7 @@ class ProductController extends Controller
         return response()->json($data);
     }
 
+    // Xem tất cả sản phẩm, chỉ hiện những trường như trả về
     public function view_all_products() {
         $products = Product::all();
         foreach ($products as $product) {
@@ -35,6 +37,7 @@ class ProductController extends Controller
         return response()->json($data);
     }
 
+    // Xem chi tiết từng sản phẩm, hiện thêm những thuộc tính trong productline
     public function view_product_detail($code) {
         $product = Product::where('product_code','=',$code)->first();
         $product_line = ProductLine::where('productline_name','=', $product->product_line)->first();

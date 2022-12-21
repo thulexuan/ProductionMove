@@ -19,8 +19,16 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ProductController;
-Route::get('admin/viewAllProducts', [ProductController::class, 'view_all_products']);
-Route::get('admin/viewProduct/{code}', [ProductController::class, 'view_product_detail']);
+use App\Http\Controllers\FactoryController;
 
-Route::get('admin/viewProductLines', [ProductController::class, 'view_product_lines']);
-Route::post('admin/createAccount', [AdminController::class, 'create_account']);
+Route::get('admin/view_all_products', [ProductController::class, 'view_all_products']);
+Route::get('admin/view_product/{code}', [ProductController::class, 'view_product_detail']);
+Route::get('admin/view_product_lines', [ProductController::class, 'view_product_lines']);
+Route::post('admin/create_account', [AdminController::class, 'create_account']);
+Route::get('admin/view_factories', [AdminController::class, 'view_factories']);
+
+Route::post('factory/add_product', [FactoryController::class, 'nhap_san_pham']);
+Route::get('factory/view_products/{factory_code}', [FactoryController::class, 'xem_san_pham']);
+Route::put('factory/deliver_product_to_store/{code}', [FactoryController::class, 'xuat_san_pham']);
+Route::get('factory/view_failed_products/{factory_code}', [FactoryController::class, 'view_failed_products']);
+

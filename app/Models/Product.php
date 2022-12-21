@@ -19,6 +19,8 @@ class Product extends Model
         'warranty_center_code',
     ];
 
+    protected $primaryKey = 'product_code';
+
     public function factory()
     {
         return $this->belongsTo('App\Models\Factory');

@@ -13,6 +13,7 @@ use App\Models\User;
 
 class AdminController extends Controller
 {
+    // Cấp tài khoản, request gửi lên gồm place_code, username, password, user_role, place_name, address
     public function create_account(Request $request) {
         $new_user = new User();
         $new_user->place_code = $request->place_code;
@@ -53,5 +54,11 @@ class AdminController extends Controller
         ]);
     }
     
+    // Xem danh sách các nhà máy
+    public function view_factories() {
+        // sử dụng bảng factories
+        $factories = Factory::all();
+        return response()->json($factories);
+    }
     
 }
