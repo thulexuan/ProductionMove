@@ -21,14 +21,21 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\FactoryController;
 
+// route chức năng của admin
 Route::get('admin/view_all_products', [ProductController::class, 'view_all_products']);
 Route::get('admin/view_product/{code}', [ProductController::class, 'view_product_detail']);
 Route::get('admin/view_product_lines', [ProductController::class, 'view_product_lines']);
 Route::post('admin/create_account', [AdminController::class, 'create_account']);
 Route::get('admin/view_factories', [AdminController::class, 'view_factories']);
+Route::get('admin/view_stores', [AdminController::class, 'view_stores']);
+Route::get('admin/view_warranty_centers', [AdminController::class, 'view_warranty_centers']);
 
-Route::post('factory/add_product', [FactoryController::class, 'nhap_san_pham']);
-Route::get('factory/view_products/{factory_code}', [FactoryController::class, 'xem_san_pham']);
+Route::get('admin/view_products_by_status/{status}', [ProductController::class,'view_products_by_status']);
+Route::get('admin/view_products_by_place/{place_code}', [ProductController::class, 'view_products_by_place']);
+
+// route chức năng của factory
+Route::post('factory/add_product', [FactoryController::class, 'add_product']);
+Route::get('factory/view_products/{factory_code}', [FactoryController::class, 'view_product']);
 Route::put('factory/deliver_product_to_store/{code}', [FactoryController::class, 'xuat_san_pham']);
 Route::get('factory/view_failed_products/{factory_code}', [FactoryController::class, 'view_failed_products']);
 

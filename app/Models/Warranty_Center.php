@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Warranty_Center extends Model
 {
     use HasFactory;
-    protected $primaryKey = 'warranty_center_code';
+    protected $table = 'warranty_centers';
 
     public function account() {
         return $this->hasOne('App\Models\User');

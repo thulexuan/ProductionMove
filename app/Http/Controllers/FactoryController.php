@@ -4,10 +4,12 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Product;
+use App\Models\ProductLine;
 
 class FactoryController extends Controller
 {
-    public function nhap_san_pham(Request $request) {
+    // Nhập sản phẩm, nhận request có product_code, product_name, product_line, brand, place_code
+    public function add_product(Request $request) {
         $product = new Product();
 
         $product->product_code = $request->product_code;
@@ -16,14 +18,14 @@ class FactoryController extends Controller
         $product->brand = $request->brand;
         $product->factory_code = $request->place_code;
 
-        $product->status = "moi san xuat";
+        $product->status = "mới sản xuất";
         $product->manufacturing_date = now();
 
         $product->save();
         return response()->json($product);
     }
 
-    public function xem_san_pham($factory_code) {
+    public function view_product($factory_code) {
         // xem tất cả sản phẩm có trong nhà máy
         $products = Product::where('factory_code','=', $factory_code)->get();
         foreach ($products as $product) {
@@ -47,6 +49,7 @@ class FactoryController extends Controller
         $product->store_code = $request->store_code;
 
         $product->status = "Đưa về đại lý";
+        $product->factory_code = null;
 
         $product->save();
         return response()->json($product);

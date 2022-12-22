@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Models\Factory;
 use App\Models\ProductLine;
+use App\Models\User;
 
 class ProductController extends Controller
 {
@@ -40,7 +41,12 @@ class ProductController extends Controller
     // Xem chi tiết từng sản phẩm, hiện thêm những thuộc tính trong productline
     public function view_product_detail($code) {
         $product = Product::where('product_code','=',$code)->first();
-        $product_line = ProductLine::where('productline_name','=', $product->product_line)->first();
+        if ($product == null) {
+            return response()->json([
+                'Message' => 'No product has this code',
+            ]);
+        } else {
+            $product_line = ProductLine::where('productline_name','=', $product->product_line)->first();
         return response()->json([
             'product_code' => $code,
             'product_line' => $product->product_line,
@@ -52,7 +58,72 @@ class ProductController extends Controller
             'total_door' => $product_line->total_doors,
             'warranty_years' => $product_line->basic_warranty_years,
         ]);
+        }
+        
 
+    }
+    
+    // Xem các sản phẩm có trạng thái là $status
+    public function view_products_by_status($status) {
+        
+        $products = Product::where('status','=',$status)->get();
+        return response()->json($products);
+    }
+
+    // Xem các sản phẩm mà đang ở nhà máy/đại lý/trung tâm bảo hành
+    public function view_products_by_place($place_code) {
+        $user = User::where('place_code','=',$place_code)->first();
+        $data = array();
+        if ($user == null) {
+            return response()->json([
+                'Message' => 'No user has this place code',
+            ]);
+        } else {
+            if ($user->user_role == "factory") {
+                $products = Product::where('factory_code','=',$place_code)->get();
+        
+            foreach ($products as $product) {
+                array_push($data, [
+                'product_code' => $product->product_code,
+                'product_line' => $product->product_line,
+                'product_name' => $product->product_name,
+                'brand' => $product->brand,
+                'status' => $product->status,
+                ]);
+              } 
+            } 
+            if ($user->user_role == "store") {
+                $products = Product::where('store_code','=',$place_code)->get();
+        
+            foreach ($products as $product) {
+                array_push($data, [
+                'product_code' => $product->product_code,
+                'product_line' => $product->product_line,
+                'product_name' => $product->product_name,
+                'brand' => $product->brand,
+                'status' => $product->status,
+                ]);
+              } 
+            } 
+
+            if ($user->user_role == "warranty_center") {
+                $products = Product::where('warranty_center_code','=',$place_code)->get();
+        
+            foreach ($products as $product) {
+                array_push($data, [
+                'product_code' => $product->product_code,
+                'product_line' => $product->product_line,
+                'product_name' => $product->product_name,
+                'brand' => $product->brand,
+                'status' => $product->status,
+                ]);
+              } 
+            } 
+            
+            
+        }
+        
+        return response()->json($data);
     }
 
     

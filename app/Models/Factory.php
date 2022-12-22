@@ -9,7 +9,12 @@ class Factory extends Model
 {
     use HasFactory;
     protected $table = 'factories';
-    protected $primaryKey = 'factory_code';
+    
+    protected $fillable = [
+        'factory_code',
+        'factory_name',
+        'address',
+    ];
 
     public function account() {
         return $this->hasOne('App\Models\User');

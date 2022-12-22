@@ -58,7 +58,46 @@ class AdminController extends Controller
     public function view_factories() {
         // sử dụng bảng factories
         $factories = Factory::all();
-        return response()->json($factories);
+        $data = array();
+        foreach ($factories as $factory) {
+            array_push($data, [
+                'factory_code' => $factory->factory_code,
+                'factory_name' => $factory->factory_name,
+                'address' => $factory->address
+                
+            ]);
+        }
+        return ($data);
     }
+
+    // Xem danh sách các đại lý 
+    public function view_stores() {
+        $stores = Store::all();
+        $data = array();
+        foreach ($stores as $store) {
+            array_push($data, [
+                'store_code' => $store->store_code,
+                'store_name' => $store->store_name,
+                'address' => $store->address
+            ]);
+        }
+        return ($data);
+    }
+
+    // Xem danh sách các trung tâm bảo hành
+    public function view_warranty_centers() {
+        $warranty_centers = Warranty_Center::all();
+        $data = array();
+        foreach ($warranty_centers as $warranty_center) {
+            array_push($data, [
+                'warranty_center_code' => $warranty_center->warranty_center_code,
+                'warranty_center_name' => $warranty_center->warranty_center_name,
+                'address' => $warranty_center->address
+            ]);
+        }
+        return ($data);
+    }
+
+    
     
 }

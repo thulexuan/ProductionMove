@@ -8,7 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 class Store extends Model
 {
     use HasFactory;
-    protected $primaryKey = 'store_code';
+    protected $table = 'stores';
+    
 
     public function account() {
         return $this->hasOne('App\Models\User');
