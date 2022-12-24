@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Factory extends Model
 {
-    use HasFactory;
+    use HasFactory, Notifiable, HasApiTokens;
     protected $table = 'factories';
     
     protected $fillable = [

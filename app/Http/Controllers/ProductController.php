@@ -5,11 +5,14 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Models\Factory;
+use App\Models\Store;
+use App\Models\Warranty_Center;
 use App\Models\ProductLine;
 use App\Models\User;
 
 class ProductController extends Controller
 {
+
     // Xem các dòng sản phẩm 
     public function view_product_lines() {
         $product_lines = ProductLine::all();
@@ -126,5 +129,44 @@ class ProductController extends Controller
         return response()->json($data);
     }
 
+    public function update_product_status($product_code, $status) {
+        $product = Product::where('product_code','=',$product_code)->first();
+        $product->status = $status;
+        $product->save();
+        return response()->json($product);
+    }
+
+    public function place_of_product($product_code) {
+        $product = Product::where('product_code','=',$product_code)->first();
+        if ($product == null) {
+            return response()->json([
+                'Message' => 'No this product',
+            ]);
+        }
+        $status = $product->status;
+        if ($status == "mới sản xuất" || $status == "lỗi đã trả về nhà máy" || $status == "trả lại nhà máy") {
+            $place_at = "Đang ở nhà máy";
+            $place_name = Factory::where('factory_code','=', $product->factory_code)->first()->factory_name;
+        }
+        if ($status == "đang ở đại lý" || $status == "đã bảo hành xong" || $status == "lỗi đã đưa về đại lý" || $status == "lỗi cần bảo hành") {
+            $place_name = Store::where('store_code','=', $product->store_code)->first()->store_name;
+            $place_at = "Đang ở đại lý";
+        }
+        if ($status == "đang bảo hành" || $status == "lỗi cần trả về nhà máy") {
+            $place_at = "Đang ở trung tâm bảo hành";
+            $place_name = Store::where('warranty_center_code','=', $product->warranty_center_code)->first()->warranty_center_name;
+        }
+        if ($status == "đã bán" || $status == "đã trả lại bảo hành") {
+            $place_at = "Đang ở khách hàng";
+            $order_number = OrderDetail::where('product_code','=',$product_code)->first()->order_number;
+            $customer_code = Order::where('order_number','=',$order_number)->first()->customer_code;
+            $place_name = Customer::where('customer_code','=',$customer_code)->first();
+        }
+        return response()->json([
+            'Đang ở' => $place_at,
+            'Tên địa điểm' => $place_name,
+        ]);
+    }
     
+
 }

@@ -5,6 +5,11 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
+use App\Models\User;
 
 class LoginController extends Controller
 {
@@ -40,31 +45,24 @@ class LoginController extends Controller
 
     public function login(Request $request)
     {   
-        $input = $request->all();
-      
-        $this->validate($request, [
-            'email' => 'required|email',
-            'password' => 'required',
+        $request->validate([
+            'username' => 'required|string',
+            'password' => 'required|string'
         ]);
-      
-        if(auth()->attempt(array('email' => $input['email'], 'password' => $input['password'])))
-        {
-            if (auth()->user()->role == 'admin') {
-                return redirect()->route('admin.home');
-            }else if (auth()->user()->role == 'factory') {
-                return redirect()->route('factory.home');
-            } else if (auth()->user()->role == 'agency') {
-                return redirect()->route('agency.home');
-            } else if (auth()->user()->role == 'service-center') {
-                return redirect()->route('service-center.home');
-            }
-            else{
-                return redirect()->route('home');
-            }
-        }else{
-            return redirect()->route('login')
-                ->with('error','Email-Address And Password Are Wrong.');
+        $credentials = request(['username','password']);
+        if (!Auth::attempt($credentials)) {
+            return response()->json(['message'=>'unauthorized'],401);
         }
+
+        $user = $request->user();
+        $tokenResult = $user->createToken('Personal Access Token');
+        $token = $tokenResult->token;
+        $token->save();
+
+        return response()->json([
+            'data'=> Auth::user(),
+            'access_token' => $tokenResult->accessToken
+        ]);
            
     }
 }

@@ -41,17 +41,17 @@ class FactoryController extends Controller
 
     }
 
-    public function xuat_san_pham(Request $request, $code) {
+    public function xuat_san_pham($code, $store_code) {
         // xuất sản phẩm có product_code = code cho đại lý 
-        // request gồm các trường: product_name, product_line, place_code (xuất cho đại lý nào)
+        // 
         // update lại product
         $product = Product::where('product_code','=',$code)->first();
-        $product->store_code = $request->store_code;
+        $product->store_code = $store_code;
 
         $product->status = "Đưa về đại lý";
         $product->factory_code = null;
 
-        $product->save();
+        // $product->save();
         return response()->json($product);
 
     }
@@ -61,7 +61,7 @@ class FactoryController extends Controller
         $products = Product::where('factory_code','=',$factory_code)->get();
         $data = array();
         foreach ($products as $product) {
-            if ($product->status == "Lỗi, đưa về nhà máy" || $product->status == "Trả lại nhà máy") {
+            if ($product->status == "Lỗi đã trả về nhà máy" || $product->status == "Trả lại nhà máy") {
                 array_push($data, [
                     'product_code' => $product->product_code,
                         'product_line' => $product->product_line,
