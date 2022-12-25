@@ -8,8 +8,13 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 
+
 class AuthController extends Controller
 {
+    // install passport
+    // run php artisan migrate
+    // run php artisan passport:install --force
+    
     public function login(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -62,7 +67,10 @@ class AuthController extends Controller
             'status' => 'success',
         ]);
     }
+
+    public function user(Request $request)
+    {
+        return response()->json($request->user());
+    }
  
-    
-    
 }
