@@ -22,6 +22,7 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\FactoryController;
 use App\Http\Controllers\StoreController;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\AuthController;
 
 // route chức năng của admin
 Route::get('admin/view_all_products', [ProductController::class, 'view_all_products']);
@@ -52,4 +53,16 @@ Route::get('product_detail/{product_code}', [ProductController::class, 'place_of
 
 // Login
 
-Route::post('login',[LoginController::class, 'login']);
+Route::group([
+    'prefix' => 'auth'
+], function () {
+    Route::post('login', [AuthController::class, 'login']);
+    
+   
+    Route::group([
+      'middleware' => 'auth:api'
+    ], function() {
+        Route::delete('logout', [AuthController::class, 'logout']);
+        Route::get('me', [AuthController::class, 'user']);
+    });
+});

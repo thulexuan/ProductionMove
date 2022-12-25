@@ -23,7 +23,7 @@ class ProductController extends Controller
                 'brand' => $product_line->make,
             ];
         }
-        return response()->json($data);
+        return response()->json($product_lines);
     }
 
     // Xem tất cả sản phẩm, chỉ hiện những trường như trả về
