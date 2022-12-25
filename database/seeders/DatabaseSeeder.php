@@ -18,12 +18,15 @@ class DatabaseSeeder extends Seeder
     
     public function run()
     {
+        
+
+        /*
         DB::table('products')->insert([
             ['product_code' => '110001', 'product_line' => 'Mercedes Benz AMG GT', 'product_name' => 'Mercedes Benz AMG GT', 'brand' => 'Mercedes', 'status' => 'mới sản xuất', 'factory_code' => 'F100', 'manufacturing_date' => fake()->dateTime()],
             ['product_code' => '110002', 'product_line' => 'Lexus CT', 'product_name' => 'CT 200h Executive', 'brand' => 'Lexus', 'status' => 'mới sản xuất', 'factory_code' => 'F100', 'manufacturing_date' => fake()->dateTime()],
             ['product_code' => '110003', 'product_line' => 'Mercedes-Maybach S', 'product_name' => 'Mercedes-Maybach S', 'brand' => 'Mercedes', 'status' => 'mới sản xuất', 'factory_code' => 'F100', 'manufacturing_date' => fake()->dateTime()],
             ['product_code' => '110004', 'product_line' => 'Lamborghini Reventon 6.5', 'product_name' => '2008 Lamborghini Reventon 6.5 V12', 'brand' => 'Lamborghini', 'status' => 'mới sản xuất', 'factory_code' => 'F100', 'manufacturing_date' => fake()->dateTime()],
-            ['product_code' => '110005', 'product_line' => 'Rolls Royce Phantom VIII', 'product_name' => 'Rolls Royce Phantom VIII', 'brand' => 'Rolls Royce', 'status' => 'mới sản xuất', 'factory_code' => 'F100', 'manufacturing_date' => fake()->dateTime()],
+            ['product_code' => '110005', 'product_line' => 'BMWX01', 'product_name' => 'BMW X1', 'brand' => 'BMW', 'status' => 'mới sản xuất', 'factory_code' => 'F100', 'manufacturing_date' => fake()->dateTime()],
 
          ]);
 
@@ -94,9 +97,9 @@ class DatabaseSeeder extends Seeder
                 'basic_warranty_years' => '5'
             ],
             [
-                'productline_code' => 'RRP01', 
-                'productline_name' => 'Rolls Royce Phantom VIII', 
-                'make' => 'Rolls Royce',
+                'productline_code' => 'BMWX01', 
+                'productline_name' => 'BMW X1', 
+                'make' => 'BMW',
                 'year' => '2018',
                 'engine_type' => 'V12',
                 'transmission' => '8 speed automatic',
@@ -106,6 +109,6 @@ class DatabaseSeeder extends Seeder
                 'total_doors' => '4',
                 'basic_warranty_years' => '4'
             ],
-         ]);
+         ]);*/
     }
 }

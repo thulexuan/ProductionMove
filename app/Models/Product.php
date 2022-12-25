@@ -20,7 +20,7 @@ class Product extends Model
     ];
 
     
-
+/*
     public function factory()
     {
         return $this->belongsTo('App\Models\Factory');
@@ -34,5 +34,5 @@ class Product extends Model
     public function warranty_center()
     {
         return $this->belongsTo('App\Models\Warranty_Center');
-    }
+    }*/
 }
