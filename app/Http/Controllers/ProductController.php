@@ -90,12 +90,70 @@ class ProductController extends Controller
 
     }
     
-    // Xem các sản phẩm có trạng thái là $status
-    public function view_products_by_status($status) {
-        
-        $products = Product::where('status','=',$status)->get();
-        return response()->json($products);
+    // Thong ke san pham theo trang thai
+    public function view_products_by_status() {
+        // trạng thái này thì số lượng là bao nhiêu
+        $status_array = array('mới sản xuất', 'đang ở đại lý', 'đã bán','đang bảo hành','đã bảo hành xong',
+        'đã trả lại bảo hành', 'lỗi cần trả về nhà máy', 'lỗi đã đưa về nhà máy', 'lỗi đã đưa về đại lý');
+        $num_of_status_array = array();
+        foreach ($status_array as $status) {
+            $num_of_products = Product::where('status','=',$status)->get()->count();
+            array_push($num_of_status_array, [
+                'status' => $status,
+                'num_of_products' => $num_of_products,
+            ]);
+        }
+        return response()->json($num_of_status_array);
     }
+
+    // Thong ke san pham theo nha may, nha may nay thi co bao nhieu san pham dang o day
+    public function view_products_by_factory() {
+        $factories = Factory::all();
+        $result = array();
+        foreach ($factories as $factory) {
+            $factory_code = $factory->factory_code;
+            $num_of_products = Product::where('factory_code','=',$factory_code)->get()->count();
+            array_push($result, [
+                'factory_code' => $factory->factory_code,
+                'factory_name' => $factory->factory_name,
+                'num_of_products' => $num_of_products,
+            ]);
+        }
+        return response()->json($result);
+    }
+
+    // Thong ke san pham theo dai ly, dai ly nay thi co bao nhieu san pham dang o day
+    public function view_products_by_store() {
+        $stores = Store::all();
+        $result = array();
+        foreach ($stores as $store) {
+            $store_code = $store->store_code;
+            $num_of_products = Product::where('store_code','=',$store_code)->get()->count();
+            array_push($result, [
+                'store_code' => $store->store_code,
+                'store_name' => $store->store_name,
+                'num_of_products' => $num_of_products,
+            ]);
+        }
+        return response()->json($result);
+    }
+
+    // Thong ke san pham theo ttbh, ttbh nay thi co bao nhieu san pham dang o day
+    public function view_products_by_warranty() {
+        $warranty_centers = Warranty_Center::all();
+        $result = array();
+        foreach ($warranty_centers as $warranty_center) {
+            $warranty_center_code = $warranty_center->warranty_center_code;
+            $num_of_products = Product::where('warranty_center_code','=',$warranty_center_code)->get()->count();
+            array_push($result, [
+                'warranty_center_code' => $warranty_center->warranty_center_code,
+                'warranty_center_name' => $warranty_center->warranty_center_name,
+                'num_of_products' => $num_of_products,
+            ]);
+        }
+        return response()->json($result);
+    }
+
 
     // Xem các sản phẩm mà đang ở nhà máy/đại lý/trung tâm bảo hành
     public function view_products_by_place($place_code) {

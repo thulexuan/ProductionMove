@@ -34,8 +34,11 @@ Route::get('admin/view_factories', [AdminController::class, 'view_factories']);
 Route::get('admin/view_stores', [AdminController::class, 'view_stores']);
 Route::get('admin/view_warranty_centers', [AdminController::class, 'view_warranty_centers']);
 
-Route::get('admin/view_products_by_status/{status}', [ProductController::class,'view_products_by_status']);
-Route::get('admin/view_products_by_place/{place_code}', [ProductController::class, 'view_products_by_place']);
+Route::get('admin/view_products_by_status', [ProductController::class,'view_products_by_status']);
+Route::get('admin/view_products_by_factory', [ProductController::class, 'view_products_by_factory']);
+Route::get('admin/view_products_by_store', [ProductController::class,'view_products_by_store']);
+Route::get('admin/view_products_by_warranty', [ProductController::class, 'view_products_by_warranty']);
+
 
 // route chức năng của factory
 
