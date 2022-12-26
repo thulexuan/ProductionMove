@@ -41,19 +41,34 @@ class FactoryController extends Controller
 
     }
 
-    public function xuat_san_pham($code, $store_code) {
-        // xuất sản phẩm có product_code = code cho đại lý 
-        // 
-        // update lại product
-        $product = Product::where('product_code','=',$code)->first();
+    public function xuat_san_pham(Request $request) {
+        // request gom cac truong product_code, store_code
+        $product_code = $request->product_code;
+        $store_code = $request->store_code;
+
+        $product = Product::where('product_code','=',$product_code)->first();
         $product->store_code = $store_code;
 
-        $product->status = "Đưa về đại lý";
+        $product->status = "đưa về đại lý";
         $product->factory_code = null;
 
-        // $product->save();
-        return response()->json($product);
+        $product->save();
+        return response()->json([
+            'message' => 'success',
+            'product' => $product,
+        ]);
 
+    }
+
+    public function nhan_san_pham_loi(Request $request) {
+        $product = Product::where('product_code','=',$request->product_code)->first();
+        $product->status = "lỗi đã trả về nhà máy";
+        $product->warranty_center_code = null;
+        $product->save();
+        return response()->json([
+            'message' => 'success',
+            'product' => $product,
+        ]);
     }
 
     // xem các sản phẩm bị lỗi và trả về 
@@ -61,7 +76,7 @@ class FactoryController extends Controller
         $products = Product::where('factory_code','=',$factory_code)->get();
         $data = array();
         foreach ($products as $product) {
-            if ($product->status == "Lỗi đã trả về nhà máy" || $product->status == "Trả lại nhà máy") {
+            if ($product->status == "lỗi đã trả về nhà máy" || $product->status == "trả lại nhà máy") {
                 array_push($data, [
                     'product_code' => $product->product_code,
                         'product_line' => $product->product_line,

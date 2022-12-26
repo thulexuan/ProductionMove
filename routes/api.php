@@ -21,6 +21,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\FactoryController;
 use App\Http\Controllers\StoreController;
+use App\Http\Controllers\WarrantyController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\AuthController;
 
@@ -37,19 +38,44 @@ Route::get('admin/view_products_by_status/{status}', [ProductController::class,'
 Route::get('admin/view_products_by_place/{place_code}', [ProductController::class, 'view_products_by_place']);
 
 // route chức năng của factory
+
+// them san pham
 Route::post('factory/add_product', [FactoryController::class, 'add_product']);
+// xem tat ca san pham co trong nha may
 Route::get('factory/view_products/{factory_code}', [FactoryController::class, 'view_product']);
-Route::put('factory/deliver_product_to_store/{code}/{store_code}', [FactoryController::class, 'xuat_san_pham']);
+// xuat san pham 
+Route::post('factory/deliver_product_to_store', [FactoryController::class, 'xuat_san_pham']);
+// xem san pham loi hoac bi tra ve
 Route::get('factory/view_failed_products/{factory_code}', [FactoryController::class, 'view_failed_products']);
+// nhan san pham loi tu ttbh
+Route::post('factory/nhan_san_pham_loi', [FactoryController::class, 'nhan_san_pham_loi']);
+
 
 // route chức năng của store
-Route::put('store/add_product/{product_code}', [StoreController::class,'nhap_san_pham']);
-Route::post('store/sold_product/{product_code}', [StoreController::class, 'ban_san_pham']);
-Route::put('store/update_status_product/{code}/{status}', [StoreController::class, 'update_product_status']);
+Route::get('store/view_products/{code}', [StoreController::class,'view_products']);
+// nhap san pham ve dai ly
+Route::post('store/add_product', [StoreController::class,'nhap_san_pham']);
+// ban san pham
+Route::post('store/sold_product', [StoreController::class, 'ban_san_pham']);
+// dua ve trung tam bao hanh
+Route::post('store/dua_ve_ttbh', [StoreController::class,'dua_ve_ttbh']);
+// nhan san pham bao hanh xong tu ttbh
+Route::post('store/nhan_lai_tu_ttbh', [StoreController::class, 'nhan_tu_ttbh']);
+// tra cho khach hang
+Route::post('store/tra_lai_kh', [StoreController::class, 'tra_lai_kh']);
 
 
+// route chức năng ttbh
+// nhan san pham can bao hanh tu dai ly
+Route::post('warranty/nhan_san_pham', [WarrantyController::class, 'nhan_san_pham']);
+// tra san pham da bao hanh cho dai ly
+Route::post('warranty/tra_cho_dai_ly', [WarrantyController::class, 'tra_cho_dai_ly']);
+// tra san pham loi ve nha may
+Route::post('warranty/tra_cho_nha_may', [WarrantyController::class, 'tra_cho_nha_may']);
+// xem tat ca cac san pham o ttbh
+Route::get('warranty/view_products/{code}', [WarrantyController::class,'view_products']);
 
-Route::get('product_detail/{product_code}', [ProductController::class, 'place_of_product']);
+
 
 // Login
 
