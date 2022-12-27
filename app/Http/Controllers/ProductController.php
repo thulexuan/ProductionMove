@@ -48,8 +48,7 @@ class ProductController extends Controller
             }
             if ($status == "đã bán" || $status == "đã trả lại bảo hành") {
             $place_at = "Đang ở khách hàng";
-            $order_number = OrderDetail::where('product_code','=',$product_code)->first()->order_number;
-            $customer_code = Order::where('order_number','=',$order_number)->first()->customer_code;
+            $customer_code = Order::where('product_code','=',$product_code)->first()->customer_code;
             $place_name = Customer::where('customer_code','=',$customer_code)->first();
             }
             $data[] = [
