@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 25, 2022 at 06:54 PM
+-- Generation Time: Dec 28, 2022 at 12:28 AM
 -- Server version: 10.4.27-MariaDB
 -- PHP Version: 8.1.12
 
@@ -35,6 +35,14 @@ CREATE TABLE `customers` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `customers`
+--
+
+INSERT INTO `customers` (`customer_code`, `customer_name`, `address`, `phoneNumber`, `created_at`, `updated_at`) VALUES
+('20020112', 'Dang Thu Huong', '165 Cau Giay', '0283456934', '2022-12-26 07:19:03', '2022-12-26 07:19:03'),
+('20020217', 'Le Thu', 'Hoai Duc, Ha Noi', '0384776738', '2022-12-27 14:09:21', '2022-12-27 14:09:21');
 
 -- --------------------------------------------------------
 
@@ -110,7 +118,15 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (101, '2022_12_19_152257_create_productlines_table', 5),
 (102, '2022_12_22_150726_create_customers_table', 5),
 (103, '2022_12_22_151029_create_orders_table', 5),
-(104, '2022_12_23_071001_create_order_details_table', 5);
+(104, '2022_12_23_071001_create_order_details_table', 5),
+(105, '2022_12_26_073448_create_modify_table', 6),
+(106, '2022_12_26_073759_create_order_details_table', 7),
+(107, '2022_12_26_094430_create_product_sold_factory_table', 8),
+(108, '2022_12_26_095011_create_add_column_table', 9),
+(109, '2022_12_26_140651_create_add_feature_table', 10),
+(110, '2022_12_26_143600_create_add_store_column_table', 11),
+(111, '2022_12_26_145149_create_warranty_product_table', 12),
+(112, '2022_12_27_210244_create_add_add_table', 12);
 
 -- --------------------------------------------------------
 
@@ -135,8 +151,11 @@ CREATE TABLE `oauth_access_tokens` (
 --
 
 INSERT INTO `oauth_access_tokens` (`id`, `user_id`, `client_id`, `name`, `scopes`, `revoked`, `created_at`, `updated_at`, `expires_at`) VALUES
+('147ba41bf714210297a6dc6f8a5095697310d61f7dba8d53a0fce32effd93c0977558c5cf2c805c8', 2, 3, 'Personal Access Token', '[]', 1, '2022-12-26 08:06:16', '2022-12-26 09:08:18', '2023-12-26 15:06:16'),
 ('2abc75dc330ba4be970c202bc752d31ff376ce33b5750aa52f2d8667ece8d67d008ac1ee025e2ec5', 2, 3, 'Personal Access Token', '[]', 1, '2022-12-25 01:04:19', '2022-12-25 01:06:28', '2023-12-25 08:04:19'),
-('aee7b6736b4dc19810e202e6559d10824a48e030b6f6f5c1ecc688a7a862568fcd0a5c87238deec3', 1, 3, 'Personal Access Token', '[]', 1, '2022-12-25 01:01:34', '2022-12-25 01:03:05', '2023-12-25 08:01:34');
+('aee7b6736b4dc19810e202e6559d10824a48e030b6f6f5c1ecc688a7a862568fcd0a5c87238deec3', 1, 3, 'Personal Access Token', '[]', 1, '2022-12-25 01:01:34', '2022-12-25 01:03:05', '2023-12-25 08:01:34'),
+('bb8b14df925312d34e25b68ce71984fcf0567dcbad6f983ac226a3d08da45d962dbf29f0a937c63b', 1, 3, 'Personal Access Token', '[]', 0, '2022-12-25 11:42:45', '2022-12-25 11:42:46', '2023-12-25 18:42:45'),
+('e5af43ffebeb0f200b3444608f3ab4b2a0c12a69ae96e2d720495e57b1d50291da482d79bd519b73', 1, 3, 'Personal Access Token', '[]', 0, '2022-12-25 11:49:14', '2022-12-25 11:49:14', '2023-12-25 18:49:14');
 
 -- --------------------------------------------------------
 
@@ -229,8 +248,17 @@ CREATE TABLE `orders` (
   `orderDate` datetime NOT NULL,
   `comment` varchar(191) DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `store_code` varchar(191) NOT NULL,
+  `product_code` varchar(191) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `orders`
+--
+
+INSERT INTO `orders` (`order_number`, `customer_code`, `orderDate`, `comment`, `created_at`, `updated_at`, `store_code`, `product_code`) VALUES
+('1111', '20020217', '2022-12-27 21:09:21', NULL, '2022-12-27 14:09:21', '2022-12-27 14:09:21', 'S101', '110004');
 
 -- --------------------------------------------------------
 
@@ -239,9 +267,20 @@ CREATE TABLE `orders` (
 --
 
 CREATE TABLE `order_details` (
+  `id` bigint(20) UNSIGNED NOT NULL,
   `order_number` varchar(191) NOT NULL,
-  `product_code` varchar(191) NOT NULL
+  `product_code` varchar(191) NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `store_code` varchar(191) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `order_details`
+--
+
+INSERT INTO `order_details` (`id`, `order_number`, `product_code`, `created_at`, `updated_at`, `store_code`) VALUES
+(3, '1100', '2471', '2022-12-26 07:19:03', '2022-12-26 07:19:03', 'S100');
 
 -- --------------------------------------------------------
 
@@ -301,12 +340,12 @@ CREATE TABLE `productlines` (
 --
 
 INSERT INTO `productlines` (`productline_code`, `productline_name`, `make`, `year`, `engine_type`, `transmission`, `drive_type`, `cylinder`, `total_seats`, `total_doors`, `basic_warranty_years`, `created_at`, `updated_at`) VALUES
-('BMWX01', 'BMW X1', 'BMW', '2018', 'V12', '8 speed automatic', 'rear-wheel drive', 'V12', '5', '4', '4', NULL, NULL),
+('BMWX001', 'BMWX01', 'BMW', '2018', 'V12', '8 speed automatic', 'rear-wheel drive', 'V12', '5', '4', '4', NULL, NULL),
 ('LRVT1', 'Lamborghini Reventon 6.5', 'Lamborghini', '2007', 'V12', '6 speed manual', 'all-wheel drive', 'V12', '2', '2', '5', NULL, NULL),
 ('LXCT01', 'Lexus CT', 'Lexus', '2016', 'Hybrid', '7 speed automatic', 'front wheel drive', 'inline 4', '5', '5', '4', NULL, NULL),
 ('LXUX01', 'Lexus UX', 'Lexus', '2020', 'Hybrid', '7 speed automatic', 'front wheel drive', 'inline 4', '5', '5', '4', NULL, NULL),
 ('MAGT', 'Mercedes Benz AMG GT', 'Mercedes', '2014', 'V8', '7 speed automatic', 'rear-wheel drive', 'V8', '2', '3', '4', NULL, NULL),
-('MBS01', 'Mercedes Maybach S', 'Mercedes', '2016', 'V12', '7 speed automatic', 'rear-wheel drive', 'V12', '4', '2', '5', NULL, NULL);
+('MBS01', 'Mercedes-Maybach S', 'Mercedes', '2016', 'V12', '7 speed automatic', 'rear-wheel drive', 'V12', '4', '2', '5', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -333,36 +372,62 @@ CREATE TABLE `products` (
 --
 
 INSERT INTO `products` (`product_code`, `product_line`, `brand`, `product_name`, `status`, `factory_code`, `store_code`, `warranty_center_code`, `manufacturing_date`, `created_at`, `updated_at`) VALUES
-('110001', 'Mercedes Benz AMG GT', 'Mercedes', 'Mercedes Benz AMG GT', 'mới sản xuất', 'F100', NULL, NULL, '1975-11-12 12:50:56', NULL, NULL),
-('110002', 'Lexus CT', 'Lexus', 'CT 200h Executive', 'mới sản xuất', 'F100', NULL, NULL, '1991-01-16 15:18:45', NULL, NULL),
-('110003', 'Mercedes-Maybach S', 'Mercedes', 'Mercedes-Maybach S', 'mới sản xuất', 'F100', NULL, NULL, '1977-03-23 19:52:33', NULL, NULL),
-('110004', 'Lamborghini Reventon 6.5', 'Lamborghini', '2008 Lamborghini Reventon 6.5 V12', 'mới sản xuất', 'F100', NULL, NULL, '2010-12-31 18:30:23', NULL, NULL),
+('110001', 'Mercedes Benz AMG GT', 'Mercedes', 'Mercedes Benz AMG GT', 'đang ở đại lý', NULL, 'S102', NULL, '1975-11-12 12:50:56', NULL, '2022-12-26 01:01:22'),
+('110002', 'Lexus CT', 'Lexus', 'CT 200h Executive', 'đưa về đại lý', NULL, 'S100', NULL, '1991-01-16 15:18:45', NULL, '2022-12-26 02:56:31'),
+('110003', 'Mercedes-Maybach S', 'Mercedes', 'Mercedes-Maybach S', 'đang ở đại lý', NULL, 'S100', NULL, '1977-03-23 19:52:33', NULL, '2022-12-27 13:54:14'),
+('110004', 'Lamborghini Reventon 6.5', 'Lamborghini', '2008 Lamborghini Reventon 6.5 V12', 'lỗi đã đưa về nhà máy', 'F100', NULL, NULL, '2010-12-31 18:30:23', NULL, '2022-12-27 15:14:00'),
 ('110005', 'BMWX01', 'BMW', 'BMW X1', 'mới sản xuất', 'F100', NULL, NULL, '1996-05-26 13:46:18', NULL, NULL),
-('161924', 'Mercedes-Maybach S', 'Lamborghini', 'CT 200h Executive', 'đưa về đại lý', 'F100', 'S100', NULL, '2022-04-14 03:27:12', '2022-12-25 10:51:46', '2022-12-25 10:51:46'),
-('173272', 'Mercedes-Maybach S', 'Lexus', 'CT 200h Executive', 'mới sản xuất', 'F102', 'S102', NULL, '2022-06-28 10:59:33', '2022-12-25 10:50:44', '2022-12-25 10:50:44'),
-('176274', 'Mercedes-Maybach S', 'BMW', 'BMW X1', 'mới sản xuất', 'F101', 'S101', NULL, '2022-01-02 07:08:49', '2022-12-25 10:50:44', '2022-12-25 10:50:44'),
-('222477', 'Mercedes-Maybach S', 'BMW', 'Mercedes Benz AMG GT', 'mới sản xuất', 'F101', 'S101', NULL, '2022-01-15 12:02:21', '2022-12-25 10:51:45', '2022-12-25 10:51:45'),
-('2471', 'Mercedes-Maybach S', 'Lamborghini', 'BMW X1', 'đang ở đại lý', 'F102', 'S100', NULL, '2022-09-01 03:03:07', '2022-12-25 10:51:46', '2022-12-25 10:51:46'),
-('315530', 'Mercedes-Maybach S', 'Lamborghini', 'Mercedes-Maybach S', 'đang ở đại lý', 'F101', 'S100', NULL, '2022-10-10 07:11:14', '2022-12-25 10:50:44', '2022-12-25 10:50:44'),
-('370552', 'BMWX01', 'Mercedes', 'Mercedes-Maybach S', 'đưa về đại lý', 'F101', 'S101', NULL, '2022-04-19 16:30:34', '2022-12-25 10:47:44', '2022-12-25 10:47:44'),
-('410065', 'Mercedes Benz AMG GT', 'BMW', 'Mercedes-Maybach S', 'đưa về đại lý', 'F101', 'S102', NULL, '2022-12-07 00:16:23', '2022-12-25 10:50:44', '2022-12-25 10:50:44'),
-('422908', 'Lexus CT', 'Lexus', 'Mercedes-Maybach S', 'đưa về đại lý', 'F100', 'S103', NULL, '2022-07-04 23:11:07', '2022-12-25 10:51:46', '2022-12-25 10:51:46'),
-('431786', 'BMWX01', 'Mercedes', 'CT 200h Executive', 'mới sản xuất', 'F101', 'S101', NULL, '2022-02-08 22:43:39', '2022-12-25 10:51:46', '2022-12-25 10:51:46'),
-('445773', 'Mercedes-Maybach S', 'Lamborghini', 'Lamborghini Reventon 6.5 V12', 'đang ở đại lý', 'F101', 'S102', NULL, '2022-02-22 08:38:40', '2022-12-25 10:51:45', '2022-12-25 10:51:45'),
-('471822', 'Mercedes Benz AMG GT', 'Lamborghini', 'CT 200h Executive', 'mới sản xuất', 'F100', 'S101', NULL, '2022-06-25 05:07:48', '2022-12-25 10:50:44', '2022-12-25 10:50:44'),
-('50350', 'Mercedes-Maybach S', 'Lexus', 'Mercedes Benz AMG GT', 'đưa về đại lý', 'F102', 'S102', NULL, '2022-03-08 22:43:34', '2022-12-25 10:50:44', '2022-12-25 10:50:44'),
-('555079', 'Mercedes Benz AMG GT', 'Lexus', 'BMW X1', 'đang ở đại lý', 'F101', 'S100', NULL, '2022-01-03 14:28:14', '2022-12-25 10:47:44', '2022-12-25 10:47:44'),
-('662748', 'Lamborghini Reventon 6.5', 'Mercedes', 'Lamborghini Reventon 6.5 V12', 'mới sản xuất', 'F102', 'S100', NULL, '2022-09-08 10:13:06', '2022-12-25 10:47:44', '2022-12-25 10:47:44'),
-('679950', 'BMWX01', 'BMW', 'Lamborghini Reventon 6.5 V12', 'mới sản xuất', 'F100', 'S100', NULL, '2022-08-20 22:23:39', '2022-12-25 10:51:45', '2022-12-25 10:51:45'),
-('69641', 'Mercedes Benz AMG GT', 'Lamborghini', 'Lamborghini Reventon 6.5 V12', 'đưa về đại lý', 'F101', 'S103', NULL, '2022-01-15 05:05:08', '2022-12-25 10:50:44', '2022-12-25 10:50:44'),
-('712772', 'BMWX01', 'BMW', 'Mercedes-Maybach S', 'đang ở đại lý', 'F101', 'S102', NULL, '2022-07-29 01:12:42', '2022-12-25 10:50:44', '2022-12-25 10:50:44'),
-('724891', 'BMWX01', 'Lamborghini', 'Mercedes Benz AMG GT', 'đang ở đại lý', 'F100', 'S103', NULL, '2022-11-02 17:10:42', '2022-12-25 10:51:46', '2022-12-25 10:51:46'),
-('749835', 'BMWX01', 'Mercedes', 'Mercedes Benz AMG GT', 'mới sản xuất', 'F102', 'S102', NULL, '2022-01-22 18:19:08', '2022-12-25 10:50:44', '2022-12-25 10:50:44'),
+('161924', 'Mercedes-Maybach S', 'Lamborghini', 'CT 200h Executive', 'lỗi đã đưa về nhà máy', 'F100', NULL, NULL, '2022-04-14 03:27:12', '2022-12-25 10:51:46', '2022-12-26 01:10:45'),
+('173272', 'Mercedes-Maybach S', 'Lexus', 'CT 200h Executive', 'mới sản xuất', 'F102', NULL, NULL, '2022-06-28 10:59:33', '2022-12-25 10:50:44', '2022-12-25 10:50:44'),
+('176274', 'Mercedes-Maybach S', 'BMW', 'BMW X1', 'mới sản xuất', 'F101', NULL, NULL, '2022-01-02 07:08:49', '2022-12-25 10:50:44', '2022-12-25 10:50:44'),
+('222477', 'Mercedes-Maybach S', 'BMW', 'Mercedes Benz AMG GT', 'mới sản xuất', 'F101', NULL, NULL, '2022-01-15 12:02:21', '2022-12-25 10:51:45', '2022-12-25 10:51:45'),
+('23451', 'BMWX01', 'BMW', 'BMW X1', 'mới sản xuất', 'F102', NULL, NULL, '2022-12-27 23:02:00', '2022-12-27 16:02:00', '2022-12-27 16:02:00'),
+('2471', 'Mercedes-Maybach S', 'Lamborghini', 'BMW X1', 'đang ở đại lý', NULL, 'S100', NULL, '2022-09-01 03:03:07', '2022-12-25 10:51:46', '2022-12-26 07:18:15'),
+('315530', 'Mercedes-Maybach S', 'Lamborghini', 'Mercedes-Maybach S', 'đang ở đại lý', NULL, 'S100', NULL, '2022-10-10 07:11:14', '2022-12-25 10:50:44', '2022-12-25 10:50:44'),
+('370552', 'BMWX01', 'Mercedes', 'Mercedes-Maybach S', 'đưa về đại lý', NULL, 'S101', NULL, '2022-04-19 16:30:34', '2022-12-25 10:47:44', '2022-12-25 10:47:44'),
+('410065', 'Mercedes Benz AMG GT', 'BMW', 'Mercedes-Maybach S', 'đưa về đại lý', NULL, 'S102', NULL, '2022-12-07 00:16:23', '2022-12-25 10:50:44', '2022-12-25 10:50:44'),
+('422908', 'Lexus CT', 'Lexus', 'Mercedes-Maybach S', 'đưa về đại lý', NULL, 'S103', NULL, '2022-07-04 23:11:07', '2022-12-25 10:51:46', '2022-12-25 10:51:46'),
+('431786', 'BMWX01', 'Mercedes', 'CT 200h Executive', 'mới sản xuất', 'F101', NULL, NULL, '2022-02-08 22:43:39', '2022-12-25 10:51:46', '2022-12-25 10:51:46'),
+('445773', 'Mercedes-Maybach S', 'Lamborghini', 'Lamborghini Reventon 6.5 V12', 'đang ở đại lý', NULL, 'S102', NULL, '2022-02-22 08:38:40', '2022-12-25 10:51:45', '2022-12-25 10:51:45'),
+('471822', 'Mercedes Benz AMG GT', 'Lamborghini', 'CT 200h Executive', 'mới sản xuất', 'F100', NULL, NULL, '2022-06-25 05:07:48', '2022-12-25 10:50:44', '2022-12-25 10:50:44'),
+('50350', 'Mercedes-Maybach S', 'Lexus', 'Mercedes Benz AMG GT', 'đưa về đại lý', NULL, 'S102', NULL, '2022-03-08 22:43:34', '2022-12-25 10:50:44', '2022-12-25 10:50:44'),
+('555', 'huhu', 'hihi', 'test', 'mới sản xuất', 'F100', NULL, NULL, '2022-12-27 18:49:28', '2022-12-27 11:49:28', '2022-12-27 11:49:28'),
+('555079', 'Mercedes Benz AMG GT', 'Lexus', 'BMW X1', 'đang ở đại lý', NULL, 'S100', NULL, '2022-01-03 14:28:14', '2022-12-25 10:47:44', '2022-12-25 10:47:44'),
+('662748', 'Lamborghini Reventon 6.5', 'Mercedes', 'Lamborghini Reventon 6.5 V12', 'mới sản xuất', 'F102', NULL, NULL, '2022-09-08 10:13:06', '2022-12-25 10:47:44', '2022-12-25 10:47:44'),
+('679950', 'BMWX01', 'BMW', 'Lamborghini Reventon 6.5 V12', 'mới sản xuất', 'F100', NULL, NULL, '2022-08-20 22:23:39', '2022-12-25 10:51:45', '2022-12-25 10:51:45'),
+('69641', 'Mercedes Benz AMG GT', 'Lamborghini', 'Lamborghini Reventon 6.5 V12', 'đưa về đại lý', NULL, 'S103', NULL, '2022-01-15 05:05:08', '2022-12-25 10:50:44', '2022-12-25 10:50:44'),
+('712772', 'BMWX01', 'BMW', 'Mercedes-Maybach S', 'đang ở đại lý', NULL, 'S102', NULL, '2022-07-29 01:12:42', '2022-12-25 10:50:44', '2022-12-25 10:50:44'),
+('724891', 'BMWX01', 'Lamborghini', 'Mercedes Benz AMG GT', 'đang ở đại lý', NULL, 'S103', NULL, '2022-11-02 17:10:42', '2022-12-25 10:51:46', '2022-12-25 10:51:46'),
+('749835', 'BMWX01', 'Mercedes', 'Mercedes Benz AMG GT', 'mới sản xuất', 'F102', NULL, NULL, '2022-01-22 18:19:08', '2022-12-25 10:50:44', '2022-12-25 10:50:44'),
 ('792898', 'BMWX01', 'Mercedes', 'CT 200h Executive', 'đưa về đại lý', 'F102', 'S102', NULL, '2022-01-26 04:32:42', '2022-12-25 10:47:44', '2022-12-25 10:47:44'),
-('834296', 'Mercedes-Maybach S', 'BMW', 'CT 200h Executive', 'đang ở đại lý', 'F101', 'S101', NULL, '2022-05-02 04:10:14', '2022-12-25 10:51:46', '2022-12-25 10:51:46'),
-('847048', 'Lexus CT', 'Lamborghini', 'Lamborghini Reventon 6.5 V12', 'đang ở đại lý', 'F100', 'S102', NULL, '2022-12-12 06:06:18', '2022-12-25 10:51:45', '2022-12-25 10:51:45'),
+('834296', 'Mercedes-Maybach S', 'BMW', 'CT 200h Executive', 'đang ở đại lý', NULL, 'S101', NULL, '2022-05-02 04:10:14', '2022-12-25 10:51:46', '2022-12-25 10:51:46'),
+('847048', 'Lexus CT', 'Lamborghini', 'Lamborghini Reventon 6.5 V12', 'đang ở đại lý', NULL, 'S102', NULL, '2022-12-12 06:06:18', '2022-12-25 10:51:45', '2022-12-25 10:51:45'),
 ('889498', 'Lamborghini Reventon 6.5', 'BMW', 'Mercedes Benz AMG GT', 'đưa về đại lý', 'F102', 'S100', NULL, '2022-08-18 16:17:50', '2022-12-25 10:47:44', '2022-12-25 10:47:44'),
-('92823', 'Mercedes Benz AMG GT', 'Lamborghini', 'Mercedes-Maybach S', 'mới sản xuất', 'F101', 'S102', NULL, '2022-07-17 05:23:01', '2022-12-25 10:50:44', '2022-12-25 10:50:44');
+('92823', 'Mercedes Benz AMG GT', 'Lamborghini', 'Mercedes-Maybach S', 'mới sản xuất', 'F101', NULL, NULL, '2022-07-17 05:23:01', '2022-12-25 10:50:44', '2022-12-25 10:50:44');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `product_sold_factory`
+--
+
+CREATE TABLE `product_sold_factory` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `factory_code` varchar(191) NOT NULL,
+  `product_code` varchar(191) NOT NULL,
+  `store_code` varchar(191) NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `sold_date` datetime NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `product_sold_factory`
+--
+
+INSERT INTO `product_sold_factory` (`id`, `factory_code`, `product_code`, `store_code`, `created_at`, `updated_at`, `sold_date`) VALUES
+(1, 'F100', '110002', 'S100', '2022-12-26 02:56:31', '2022-12-26 02:56:31', '2022-12-26 09:56:31'),
+(2, 'F100', '110004', 'S101', '2022-12-27 13:59:03', '2022-12-27 13:59:03', '2022-12-27 20:59:03');
 
 -- --------------------------------------------------------
 
@@ -449,6 +514,22 @@ INSERT INTO `warranty_centers` (`warranty_center_code`, `warranty_center_name`, 
 ('W102', 'Lexus Hai Phong', '47 Trần Duy Hưng, tp. Hải Phòng', '2022-12-25 01:19:26', '2022-12-25 01:19:26'),
 ('W103', 'Alas Factory', '104 Ngọc Hồi, Hoàng Mai, Hà Nội', '2022-12-25 01:21:05', '2022-12-25 01:21:05');
 
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `warranty_products`
+--
+
+CREATE TABLE `warranty_products` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `product_code` varchar(191) NOT NULL,
+  `warranty_center_code` varchar(191) NOT NULL,
+  `date` datetime NOT NULL,
+  `product_status` varchar(191) NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 --
 -- Indexes for dumped tables
 --
@@ -519,6 +600,12 @@ ALTER TABLE `orders`
   ADD PRIMARY KEY (`order_number`);
 
 --
+-- Indexes for table `order_details`
+--
+ALTER TABLE `order_details`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `password_resets`
 --
 ALTER TABLE `password_resets`
@@ -545,6 +632,12 @@ ALTER TABLE `products`
   ADD PRIMARY KEY (`product_code`);
 
 --
+-- Indexes for table `product_sold_factory`
+--
+ALTER TABLE `product_sold_factory`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `stores`
 --
 ALTER TABLE `stores`
@@ -564,6 +657,12 @@ ALTER TABLE `warranty_centers`
   ADD PRIMARY KEY (`warranty_center_code`);
 
 --
+-- Indexes for table `warranty_products`
+--
+ALTER TABLE `warranty_products`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- AUTO_INCREMENT for dumped tables
 --
 
@@ -577,7 +676,7 @@ ALTER TABLE `failed_jobs`
 -- AUTO_INCREMENT for table `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=105;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=113;
 
 --
 -- AUTO_INCREMENT for table `oauth_clients`
@@ -592,16 +691,34 @@ ALTER TABLE `oauth_personal_access_clients`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
+-- AUTO_INCREMENT for table `order_details`
+--
+ALTER TABLE `order_details`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
 -- AUTO_INCREMENT for table `personal_access_tokens`
 --
 ALTER TABLE `personal_access_tokens`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT for table `product_sold_factory`
+--
+ALTER TABLE `product_sold_factory`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+
+--
+-- AUTO_INCREMENT for table `warranty_products`
+--
+ALTER TABLE `warranty_products`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
