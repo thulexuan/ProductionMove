@@ -16,22 +16,29 @@ class StoreController extends Controller
         $products = Product::where('store_code','=', $store_code)->get();
         $data = array();
         foreach ($products as $product) {
-            array_push($data,[
-                'product_code' => $product->product_code,
-                'product_line' => $product->product_line,
-                'product_name' => $product->product_name,
-                'brand' => $product->brand,
-                'status' => $product->status,
-            ]);
+            if ($product->status=='đang ở đại lý' || $product->status=='đã bảo hành xong' 
+            || $product->status=='lỗi đã đưa về đại lý' || $product->status=='lỗi cần bảo hành') {
+                array_push($data,[
+                    'product_code' => $product->product_code,
+                    'product_line' => $product->product_line,
+                    'product_name' => $product->product_name,
+                    'brand' => $product->brand,
+                    'status' => $product->status,
+                ]);
+            }
+            
         }
         return response()->json($data);
 
     }
 
+    // nhap san pham tu factory
     public function nhap_san_pham(Request $request) {
-        // request co truong product_code
+        // request co truong product_code, factory_code, store_code
         $product = Product::where('product_code','=',$request->product_code)->first();
-        $product->status = "đã đưa về đại lý";
+        $product->status = "đang ở đại lý";
+        $product->factory_code = null;
+        $product->store_code = $request->store_code;
         
         $product->save();
         return response()->json([
@@ -42,8 +49,9 @@ class StoreController extends Controller
 
     public function ban_san_pham(Request $request) {
         // request gom cac truong: product_code, customer_code, customer_name, address, phone_number,
-        // order_number
+        // order_number, $store_code
         $product = Product::where('product_code','=', $request->product_code)->first();
+        $product->store_code = null;
         $product->status = "đã bán";
         $product->save();
 
@@ -58,7 +66,8 @@ class StoreController extends Controller
         $order = new Order();
         $order->order_number = $request->order_number;
         $order->customer_code = $request->customer_code;
-        $order->store_code = $product->store_code;
+        $order->store_code = $request->store_code;
+        $order->product_code = $product->product_code;
         $order->orderDate = now();
 
         $order->save();
@@ -72,6 +81,18 @@ class StoreController extends Controller
             
         ]);
 
+    }
+
+    public function nhan_tu_kh(Request $request) {
+        // request gom product_code, customer_code, store_code
+        $product = Product::where('product_code','=',$request->product_code)->first();
+        $product->status = "lỗi cần bảo hành";
+        $product->store_code = $request->store_code;
+        $product->save();
+        return response()->json([
+            'message' => 'success',
+            'product' => $product,
+        ]);
     }
 
     public function dua_ve_ttbh(Request $request) {
@@ -88,26 +109,16 @@ class StoreController extends Controller
     }
 
     public function nhan_tu_ttbh(Request $request) {
-        // request gom product_code, store_code
+        // request gom product_code, store_code, warranty_code
         $product = Product::where('product_code','=',$request->product_code)->first();
         $product->status = "đã bảo hành xong";
-        $product->warranty_center_code = null;
         $product->store_code = $request->store_code;
         $product->save();
         return response()->json($product);
 
     }
 
-    public function nhan_tu_kh(Request $request) {
-        // request gom product_code
-        $product = Product::where('product_code','=',$request->product_code)->first();
-        $product->status = "lỗi cần bảo hành";
-        $product->save();
-        return response()->json([
-            'message' => 'success',
-            'product' => $product,
-        ]);
-    }
+    
 
     public function tra_lai_kh(Request $request) {
         // request gom product_code

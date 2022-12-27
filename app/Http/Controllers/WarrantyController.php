@@ -21,9 +21,8 @@ class WarrantyController extends Controller
     public function tra_cho_dai_ly(Request $request) {
         // request gom product_code, $store_code
         $product = Product::where('product_code','=',$request->product_code)->first();
-        $product->status = "đã bảo hành xong, trả cho đại lý";
+        $product->status = "đã bảo hành xong, trả đại lý";
         $product->store_code = $request->store_code;
-        $product->warranty_center_code = null;
         $product->save();
         return response()->json([
             'message' => 'success',
@@ -49,13 +48,16 @@ class WarrantyController extends Controller
         $products = Product::where('warranty_center_code','=', $warranty_code)->get();
         $data = array();
         foreach ($products as $product) {
-            array_push($data,[
-                'product_code' => $product->product_code,
-                'product_line' => $product->product_line,
-                'product_name' => $product->product_name,
-                'brand' => $product->brand,
-                'status' => $product->status,
-            ]);
+            if ($product->status=='đang bảo hành' || $product->status=='lỗi cần trả về nhà máy') {
+                array_push($data,[
+                    'product_code' => $product->product_code,
+                    'product_line' => $product->product_line,
+                    'product_name' => $product->product_name,
+                    'brand' => $product->brand,
+                    'status' => $product->status,
+                ]);
+            }
+            
         }
         return response()->json($data);
     }

@@ -45,7 +45,7 @@ Route::get('admin/view_products_by_warranty', [ProductController::class, 'view_p
 // them san pham
 Route::post('factory/add_product', [FactoryController::class, 'add_product']);
 // xem tat ca san pham co trong nha may
-Route::get('factory/view_products/{factory_code}', [FactoryController::class, 'view_product']);
+Route::get('factory/view_products/{factory_code}', [FactoryController::class, 'view_products']);
 // xuat san pham 
 Route::post('factory/deliver_product_to_store', [FactoryController::class, 'xuat_san_pham']);
 // xem san pham loi hoac bi tra ve
@@ -54,14 +54,17 @@ Route::get('factory/view_failed_products/{factory_code}', [FactoryController::cl
 Route::post('factory/nhan_san_pham_loi', [FactoryController::class, 'nhan_san_pham_loi']);
 // thong ke san pham da ban theo thang
 Route::get('factory/statistic/{factory_code}/{year}', [FactoryController::class, 'statistic_sold_product']);
-
+// thong ke loi theo tung dong san pham
+Route::get('factory/statistic_failed_by_product_lines/{factory_code}', [FactoryController::class, 'thong_ke_loi_theo_dong_san_pham']);
 
 // route chức năng của store
-Route::get('store/view_products/{code}', [StoreController::class,'view_products']);
+Route::get('store/view_products/{store_code}', [StoreController::class,'view_products']);
 // nhap san pham ve dai ly
 Route::post('store/add_product', [StoreController::class,'nhap_san_pham']);
 // ban san pham
 Route::post('store/sold_product', [StoreController::class, 'ban_san_pham']);
+// nhan san pham loi tu khach hang
+Route::post('store/nhan_tu_kh',[StoreController::class,'nhan_tu_kh']);
 // dua ve trung tam bao hanh
 Route::post('store/dua_ve_ttbh', [StoreController::class,'dua_ve_ttbh']);
 // nhan san pham bao hanh xong tu ttbh

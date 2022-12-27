@@ -5,14 +5,18 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Models\ProductLine;
+use App\Models\Factory;
 use App\Models\ProductSoldFactory;
+
 
 class FactoryController extends Controller
 {
 
     // Nhập sản phẩm, nhận request có product_code, product_name, product_line, brand, place_code
     public function add_product(Request $request) {
-        $product = new Product();
+        $product_check = Product::where('product_code','=',$request->product_code)->first();
+        if ($product_check == null) {
+            $product = new Product();
 
         $product->product_code = $request->product_code;
         $product->product_name = $request->product_name;
@@ -23,11 +27,19 @@ class FactoryController extends Controller
         $product->status = "mới sản xuất";
         $product->manufacturing_date = now();
 
+        
         $product->save();
+        
         return response()->json($product);
+        }
+        else {
+            return response()->json([
+                'message' => "product_code đã tồn tại",
+            ]);
+        }
     }
 
-    public function view_product($factory_code) {
+    public function view_products($factory_code) {
         // xem tất cả sản phẩm có trong nhà máy
         $products = Product::where('factory_code','=', $factory_code)->get();
         foreach ($products as $product) {
@@ -72,9 +84,11 @@ class FactoryController extends Controller
     }
 
     public function nhan_san_pham_loi(Request $request) {
+        // request có product_code, factory_code
         $product = Product::where('product_code','=',$request->product_code)->first();
-        $product->status = "lỗi đã trả về nhà máy";
+        $product->status = "lỗi đã đưa về nhà máy";
         $product->warranty_center_code = null;
+        $product->store_code = null;
         $factory_code = $product->factory_code;
 
         $product->save();
@@ -84,12 +98,12 @@ class FactoryController extends Controller
         ]);
     }
 
-    // xem các sản phẩm bị lỗi và trả về 
+    // xem các sản phẩm bị lỗi
     public function view_failed_products($factory_code) {
         $products = Product::where('factory_code','=',$factory_code)->get();
         $data = array();
         foreach ($products as $product) {
-            if ($product->status == "lỗi đã trả về nhà máy" || $product->status == "trả lại nhà máy") {
+            if ($product->status == "lỗi đã đưa về nhà máy") {
                 array_push($data, [
                     'product_code' => $product->product_code,
                         'product_line' => $product->product_line,
@@ -109,11 +123,14 @@ class FactoryController extends Controller
         
     }
 
+    // thống kê sản phẩm đã bán qua 12 tháng của từng năm và hiển thị tháng bán nhiều nhất
     public function statistic_sold_product($factory_code, $year) {
         $products_sold_factory = ProductSoldFactory::where('factory_code','=',$factory_code)
         ->whereYear('sold_date','=',$year)->get();
 
         $result = array();
+        $num_all = $products_sold_factory->count();
+        
         for ($month = 1; $month <= 12; $month++) {
             foreach ($products_sold_factory as $product_sold_factory) {
             
@@ -121,14 +138,79 @@ class FactoryController extends Controller
                 array_push($result, [
                     'month' => $month,
                     'num_of_products' => $num_of_products,
+                    'ratio' => $num_of_products*100/$num_all,
                 ]);
             } 
         }
-        $num_all = $products_sold_factory->count();
+        
         array_push($result, [
             'All sold products' => $num_all,
+        ]);
+        $max_ratio = 0;
+        $max_month = array();
+        for ($i=0;$i<count($result)-1;$i++) {
+            if ($result[$i]['ratio'] > $max_ratio) {
+                $max_ratio = $result[$i]['ratio'];
+            }
+        }
+        for ($i=0;$i<count($result)-1;$i++) {
+            if ($result[$i]['ratio'] == $max_ratio) {
+                array_push($max_month,$result[$i]['month']);
+            }
+        }
+        array_push($result, [
+            'Month sold max' => $max_month,
         ]);
         
         return response()->json($result);
     }
+
+    // thống kê sản phẩm lỗi theo dòng sản phẩm và tìm ra dòng sản phẩm lỗi nhiều nhất
+    public function thong_ke_loi_theo_dong_san_pham($factory_code) { 
+        $failed_products = Product::where('status','=','lỗi đã đưa về nhà máy')
+        ->where('factory_code','=',$factory_code)->get();
+        $result = array();
+        if (count($failed_products) != 0) {
+            $product_lines = ProductLine::all();
+            foreach ($product_lines as $product_line) {
+            $num_failed_products = Product::where('status','=','lỗi đã đưa về nhà máy')
+            ->where('factory_code','=',$factory_code)->where('product_line','=',$product_line->productline_name)
+            ->get()->count();
+            array_push($result, [
+                'product_line' => $product_line->productline_name,
+                'num_failed_products' => $num_failed_products,
+                'ratio' =>  $num_failed_products*100/count($failed_products),
+            ]);
+        }
+
+        $max_ratio = 0;
+        $max_product_lines = array();
+        for ($i=0;$i<count($result);$i++) {
+            if ($result[$i]['ratio'] > $max_ratio) {
+                $max_ratio = $result[$i]['ratio'];
+            }
+        }
+        for ($i=0;$i<count($result);$i++) {
+            if ($result[$i]['ratio'] == $max_ratio) {
+                array_push($max_product_lines,$result[$i]['product_line']);
+            }
+        }
+        array_push($result,[
+            'num_failed_products' => count($failed_products),
+        ],
+        [
+            'productline failed max' => $max_product_lines,
+        ]);
+
+            return response()->json($result);
+        } else {
+            return response()->json([
+                'message' => 'no failed products',
+                'result' => $result,
+            ]);
+        }
+        
+    }
+
+    // thống kê sản phẩm theo số sản phẩm nhập vào theo 12 tháng trong năm 
 }

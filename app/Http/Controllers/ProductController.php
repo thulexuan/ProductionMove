@@ -30,7 +30,7 @@ class ProductController extends Controller
             $product_code = $product->product_code;
             $place_at = null;
             $place_name = null;
-            if ($status == "mới sản xuất" || $status == "lỗi đã trả về nhà máy" || $status == "trả lại nhà máy") {
+            if ($status == "mới sản xuất" || $status == "lỗi đã đưa về nhà máy" || $status == "trả lại nhà máy") {
             $place_at = "Đang ở nhà máy";
             $place_name = Factory::where('factory_code','=', $product->factory_code)->first()->factory_name;
             }
