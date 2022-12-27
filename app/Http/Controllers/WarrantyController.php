@@ -32,7 +32,7 @@ class WarrantyController extends Controller
     }
 
     public function tra_cho_nha_may(Request $request) {
-        // request gom product_code, $factory_code
+        // request gom product_code, $factory_code, $warranty_center_code
         $product = Product::where('product_code','=',$request->product_code)->first();
         $product->factory_code = $request->factory_code;
         $product->warranty_center_code = $request->warranty_center_code;
@@ -60,4 +60,5 @@ class WarrantyController extends Controller
         return response()->json($data);
     }
 
+    
 }

@@ -52,6 +52,8 @@ Route::post('factory/deliver_product_to_store', [FactoryController::class, 'xuat
 Route::get('factory/view_failed_products/{factory_code}', [FactoryController::class, 'view_failed_products']);
 // nhan san pham loi tu ttbh
 Route::post('factory/nhan_san_pham_loi', [FactoryController::class, 'nhan_san_pham_loi']);
+// thong ke san pham da ban theo thang
+Route::get('factory/statistic/{factory_code}/{year}', [FactoryController::class, 'statistic_sold_product']);
 
 
 // route chức năng của store
@@ -66,6 +68,8 @@ Route::post('store/dua_ve_ttbh', [StoreController::class,'dua_ve_ttbh']);
 Route::post('store/nhan_lai_tu_ttbh', [StoreController::class, 'nhan_tu_ttbh']);
 // tra cho khach hang
 Route::post('store/tra_lai_kh', [StoreController::class, 'tra_lai_kh']);
+// Xem thong ke san pham da ban
+Route::get('store/statistic_sold_products/{store_code}/{year}', [StoreController::class, 'statistic_sold_product']);
 
 
 // route chức năng ttbh

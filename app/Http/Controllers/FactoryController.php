@@ -5,9 +5,11 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Models\ProductLine;
+use App\Models\ProductSoldFactory;
 
 class FactoryController extends Controller
 {
+
     // Nhập sản phẩm, nhận request có product_code, product_name, product_line, brand, place_code
     public function add_product(Request $request) {
         $product = new Product();
@@ -42,15 +44,24 @@ class FactoryController extends Controller
     }
 
     public function xuat_san_pham(Request $request) {
-        // request gom cac truong product_code, store_code
+        // request gom cac truong product_code, store_code, $factory_code
         $product_code = $request->product_code;
         $store_code = $request->store_code;
+        $factory_code = $request->factory_code;
 
         $product = Product::where('product_code','=',$product_code)->first();
         $product->store_code = $store_code;
 
         $product->status = "đưa về đại lý";
         $product->factory_code = null;
+
+        $product_sold_factory = new ProductSoldFactory();
+        $product_sold_factory->factory_code = $factory_code;
+        $product_sold_factory->product_code = $product_code;
+        $product_sold_factory->store_code = $store_code;
+        $product_sold_factory->sold_date = now();
+
+        $product_sold_factory->save();
 
         $product->save();
         return response()->json([
@@ -64,6 +75,8 @@ class FactoryController extends Controller
         $product = Product::where('product_code','=',$request->product_code)->first();
         $product->status = "lỗi đã trả về nhà máy";
         $product->warranty_center_code = null;
+        $factory_code = $product->factory_code;
+
         $product->save();
         return response()->json([
             'message' => 'success',
@@ -94,5 +107,28 @@ class FactoryController extends Controller
             return response()->json($data);
         }
         
+    }
+
+    public function statistic_sold_product($factory_code, $year) {
+        $products_sold_factory = ProductSoldFactory::where('factory_code','=',$factory_code)
+        ->whereYear('sold_date','=',$year)->get();
+
+        $result = array();
+        for ($month = 1; $month <= 12; $month++) {
+            foreach ($products_sold_factory as $product_sold_factory) {
+            
+                $num_of_products = ProductSoldFactory::whereMonth('sold_date','=', $month)->get()->count();
+                array_push($result, [
+                    'month' => $month,
+                    'num_of_products' => $num_of_products,
+                ]);
+            } 
+        }
+        $num_all = $products_sold_factory->count();
+        array_push($result, [
+            'All sold products' => $num_all,
+        ]);
+        
+        return response()->json($result);
     }
 }

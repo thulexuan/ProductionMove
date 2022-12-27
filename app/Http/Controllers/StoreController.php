@@ -58,21 +58,18 @@ class StoreController extends Controller
         $order = new Order();
         $order->order_number = $request->order_number;
         $order->customer_code = $request->customer_code;
+        $order->store_code = $product->store_code;
         $order->orderDate = now();
 
         $order->save();
 
-        $orderDetail = new OrderDetail();
-        $orderDetail->product_code = $request->product_code;
-        $orderDetail->order_number = $request->order_number;
-
-        $orderDetail->save();
+        
 
         return response()->json([
             'Message' => 'Bán sản phẩm thành công',
             'customer' => $customer,
             'order' => $order,
-            'orderDetail' => $orderDetail,
+            
         ]);
 
     }
@@ -122,6 +119,27 @@ class StoreController extends Controller
             'message' => 'success',
             'product' => $product,
         ]);
+    }
+
+    public function statistic_sold_product($store_code, $year) {
+        $sold_products = Order::where('store_code','=',$store_code)
+        ->whereYear('orderDate','=',$year)->get();
+        $result = array();
+        for ($month = 1; $month <= 12; $month++) {
+            foreach ($sold_products as $sold_product) {
+                $num_of_products = Order::whereMonth('orderDate','=',$month)->get()->count();
+                array_push($result, [
+                    'month' => $month,
+                    'num_of_sold_products' => $num_of_products,
+                ]);
+            } 
+        }
+        $num_all = $sold_products->count();
+        array_push($result, [
+            'All sold products' => $num_all,
+        ]);
+        
+        return response()->json($result);
     }
 
     
