@@ -43,13 +43,16 @@ class FactoryController extends Controller
         // xem tất cả sản phẩm có trong nhà máy
         $products = Product::where('factory_code','=', $factory_code)->get();
         foreach ($products as $product) {
-            $data[] = [
-                'product_code' => $product->product_code,
-                'product_line' => $product->product_line,
-                'product_name' => $product->product_name,
-                'brand' => $product->brand,
-                'status' => $product->status,
-            ];
+            if ($product->status =='mới sản xuất' || $product->status =='lỗi đã đưa về nhà máy') {
+                $data[] = [
+                    'product_code' => $product->product_code,
+                    'product_line' => $product->product_line,
+                    'product_name' => $product->product_name,
+                    'brand' => $product->brand,
+                    'status' => $product->status,
+                ];
+            }
+            
         }
         return response()->json($data);
 

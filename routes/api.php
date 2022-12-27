@@ -84,6 +84,12 @@ Route::post('warranty/tra_cho_dai_ly', [WarrantyController::class, 'tra_cho_dai_
 Route::post('warranty/tra_cho_nha_may', [WarrantyController::class, 'tra_cho_nha_may']);
 // xem tat ca cac san pham o ttbh
 Route::get('warranty/view_products/{code}', [WarrantyController::class,'view_products']);
+// thong ke san pham da bao hanh duoc
+Route::get('warranty/statistic_done/{warranty_center_code}', [WarrantyController::class, 'statistic_done_products']);
+// thong ke san pham loi can tra ve nha may
+Route::get('warranty/statistic_failed/{warranty_center_code}', [WarrantyController::class, 'statistic_failed_products']);
+
+
 
 
 
