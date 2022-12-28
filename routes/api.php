@@ -38,7 +38,7 @@ Route::get('admin/view_products_by_status', [ProductController::class,'view_prod
 Route::get('admin/view_products_by_factory', [ProductController::class, 'view_products_by_factory']);
 Route::get('admin/view_products_by_store', [ProductController::class,'view_products_by_store']);
 Route::get('admin/view_products_by_warranty', [ProductController::class, 'view_products_by_warranty']);
-
+Route::post('admin/add_product_line', [AdminController::class, 'add_product_line']);
 
 // route chức năng của factory
 
@@ -108,3 +108,4 @@ Route::group([
         Route::get('me', [AuthController::class, 'user']);
     });
 });
+

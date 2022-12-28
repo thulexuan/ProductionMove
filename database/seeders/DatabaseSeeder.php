@@ -18,7 +18,13 @@ class DatabaseSeeder extends Seeder
     
     public function run()
     {
-        
+        /*
+        DB::table('users')->insert([
+            'place_code' => 'ADMIN',
+            'username' => 'admin',
+            'password' => bcrypt('admin'),
+            'user_role' => 'admin'
+        ]);*/
 
         /*
         DB::table('products')->insert([

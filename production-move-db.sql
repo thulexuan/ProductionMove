@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 28, 2022 at 12:28 AM
+-- Generation Time: Dec 28, 2022 at 06:39 AM
 -- Server version: 10.4.27-MariaDB
 -- PHP Version: 8.1.12
 
@@ -153,8 +153,13 @@ CREATE TABLE `oauth_access_tokens` (
 INSERT INTO `oauth_access_tokens` (`id`, `user_id`, `client_id`, `name`, `scopes`, `revoked`, `created_at`, `updated_at`, `expires_at`) VALUES
 ('147ba41bf714210297a6dc6f8a5095697310d61f7dba8d53a0fce32effd93c0977558c5cf2c805c8', 2, 3, 'Personal Access Token', '[]', 1, '2022-12-26 08:06:16', '2022-12-26 09:08:18', '2023-12-26 15:06:16'),
 ('2abc75dc330ba4be970c202bc752d31ff376ce33b5750aa52f2d8667ece8d67d008ac1ee025e2ec5', 2, 3, 'Personal Access Token', '[]', 1, '2022-12-25 01:04:19', '2022-12-25 01:06:28', '2023-12-25 08:04:19'),
+('2af4c3574439ccd54acf0ab7f5ad819a82e4632e501377e3304b8cb1328f51b49b7bc84197c05df0', 16, 3, 'Personal Access Token', '[]', 0, '2022-12-27 21:55:09', '2022-12-27 21:55:09', '2023-12-28 04:55:09'),
+('591a2a0530e3c460df621344931fb6294b9202e626f630d87cdf3168b38243270679908579f5b78a', 17, 3, 'Personal Access Token', '[]', 0, '2022-12-27 22:20:26', '2022-12-27 22:20:26', '2023-12-28 05:20:26'),
+('7adb379c3fc92ee376e374b7b71a0474a75fcd02a41576dc033f31c46888ac01f322ce31770745b6', 1, 3, 'Personal Access Token', '[]', 0, '2022-12-27 21:40:49', '2022-12-27 21:40:49', '2023-12-28 04:40:49'),
+('9a670f66b29eacd7ce51fd8d9107218d411c37230eea5785929a8e09aefd6c9f65ab68d8c8d8088a', 16, 3, 'Personal Access Token', '[]', 0, '2022-12-27 22:04:09', '2022-12-27 22:04:09', '2023-12-28 05:04:09'),
 ('aee7b6736b4dc19810e202e6559d10824a48e030b6f6f5c1ecc688a7a862568fcd0a5c87238deec3', 1, 3, 'Personal Access Token', '[]', 1, '2022-12-25 01:01:34', '2022-12-25 01:03:05', '2023-12-25 08:01:34'),
 ('bb8b14df925312d34e25b68ce71984fcf0567dcbad6f983ac226a3d08da45d962dbf29f0a937c63b', 1, 3, 'Personal Access Token', '[]', 0, '2022-12-25 11:42:45', '2022-12-25 11:42:46', '2023-12-25 18:42:45'),
+('d78c8a995dc9423bf2e7b55589264e6bf68c2c4c21b1cfbde06350433dfa82bf25ecc9a919e9739f', 8, 3, 'Personal Access Token', '[]', 0, '2022-12-27 21:45:24', '2022-12-27 21:45:24', '2023-12-28 04:45:24'),
 ('e5af43ffebeb0f200b3444608f3ab4b2a0c12a69ae96e2d720495e57b1d50291da482d79bd519b73', 1, 3, 'Personal Access Token', '[]', 0, '2022-12-25 11:49:14', '2022-12-25 11:49:14', '2023-12-25 18:49:14');
 
 -- --------------------------------------------------------
@@ -340,6 +345,7 @@ CREATE TABLE `productlines` (
 --
 
 INSERT INTO `productlines` (`productline_code`, `productline_name`, `make`, `year`, `engine_type`, `transmission`, `drive_type`, `cylinder`, `total_seats`, `total_doors`, `basic_warranty_years`, `created_at`, `updated_at`) VALUES
+('BMWM01', 'BMW M1', 'BMW', '2021', 'V12', '8 speed automatic', 'rear-wheel drive', 'V12', '5', '4', '5', '2022-12-27 22:33:53', '2022-12-27 22:33:53'),
 ('BMWX001', 'BMWX01', 'BMW', '2018', 'V12', '8 speed automatic', 'rear-wheel drive', 'V12', '5', '4', '4', NULL, NULL),
 ('LRVT1', 'Lamborghini Reventon 6.5', 'Lamborghini', '2007', 'V12', '6 speed manual', 'all-wheel drive', 'V12', '2', '2', '5', NULL, NULL),
 ('LXCT01', 'Lexus CT', 'Lexus', '2016', 'Hybrid', '7 speed automatic', 'front wheel drive', 'inline 4', '5', '5', '4', NULL, NULL),
@@ -488,7 +494,9 @@ INSERT INTO `users` (`id`, `place_code`, `username`, `password`, `user_role`, `r
 (8, 'W100', 'warranty100', '$2y$10$XA65GfFm/YopEpprW3ALkeWCWBIoTDBdTvir2wvKuQa23WjNMOGgu', 'warranty_center', 0, NULL, NULL, NULL, '2022-12-25 01:18:40', '2022-12-25 01:18:40'),
 (9, 'W101', 'warranty101', '$2y$10$b.2IijyaD3.a9XkwogTTOe5AWgx.onYyFa9facx1idw1ERu0xZTVy', 'warranty_center', 0, NULL, NULL, NULL, '2022-12-25 01:19:00', '2022-12-25 01:19:00'),
 (10, 'W102', 'warranty102', '$2y$10$rSBcSO8JaYkbWKcs.l8Nku73ae6n68WkV8fqLWDhhCUCuyotguDzC', 'warranty_center', 0, NULL, NULL, NULL, '2022-12-25 01:19:27', '2022-12-25 01:19:27'),
-(11, 'W103', 'warranty103', '$2y$10$PcFHmCjcZWR3TEdwzRhxV.IsBtY8M9V4nBQKoNLu3wxzaXbcZZU/i', 'warranty_center', 0, NULL, NULL, NULL, '2022-12-25 01:21:05', '2022-12-25 01:21:05');
+(11, 'W103', 'warranty103', '$2y$10$PcFHmCjcZWR3TEdwzRhxV.IsBtY8M9V4nBQKoNLu3wxzaXbcZZU/i', 'warranty_center', 0, NULL, NULL, NULL, '2022-12-25 01:21:05', '2022-12-25 01:21:05'),
+(16, 'ADMIN', 'admin01', '$2y$10$gcuuwS4lyiAaC2zKsFxbSe8ay5wJatWjjRqANNH2y7to1e1iozlSK', 'admin', 0, NULL, NULL, NULL, '2022-12-27 21:54:35', '2022-12-27 21:54:35'),
+(17, 'ADMIN', 'admin', '$2y$10$PnxaiSbA.YMGfyzfycR19epD6IIKZ0/4yueuWpDDQTurxG.muVlgO', 'admin', 0, NULL, NULL, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -712,7 +720,7 @@ ALTER TABLE `product_sold_factory`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- AUTO_INCREMENT for table `warranty_products`

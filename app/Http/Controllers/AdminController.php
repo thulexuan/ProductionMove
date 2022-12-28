@@ -10,6 +10,7 @@ use App\Models\Factory;
 use App\Models\Store;
 use App\Models\Warranty_Center;
 use App\Models\User;
+use App\Models\ProductLine;
 
 class AdminController extends Controller
 {
@@ -99,6 +100,23 @@ class AdminController extends Controller
         return ($data);
     }
 
-    
+    // thêm dòng sản phẩm mới
+    public function add_product_line(Request $request) {
+        $product_line = new ProductLine();
+        $product_line->productline_code = $request->productline_code;
+        $product_line->productline_name = $request->productline_name;
+        $product_line->make = $request->make;
+        $product_line->year = $request->year;
+        $product_line->engine_type = $request->engine_type;
+        $product_line->transmission = $request->transmission;
+        $product_line->drive_type = $request->drive_type;
+        $product_line->cylinder = $request->cylinder;
+        $product_line->total_seats = $request->total_seats;
+        $product_line->total_doors = $request->total_doors;
+        $product_line->basic_warranty_years = $request->basic_warranty_years;
+
+        $product_line->save();
+        return response()->json($product_line);
+    }
     
 }
