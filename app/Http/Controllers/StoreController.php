@@ -38,7 +38,7 @@ class StoreController extends Controller
         $product = Product::where('product_code','=',$request->product_code)->first();
         $product->status = "đang ở đại lý";
         $product->factory_code = null;
-        $product->store_code = $request->store_code;
+        // $product->store_code = $request->store_code;
         
         $product->save();
         return response()->json([
