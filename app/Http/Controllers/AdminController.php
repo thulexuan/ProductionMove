@@ -55,6 +55,63 @@ class AdminController extends Controller
             'Message' => 'Create user successfully',
         ]);
     }
+
+    public function delete_account(Request $request) {
+        // request gom place_code
+        $user = User::where('place_code','=',$request->place_code)->first();
+        
+        $user_role = $user->user_role;
+        if ($user_role == 'factory') {
+            $factory = Factory::where('factory_code','=',$user->place_code)->first();
+            $factory->delete();
+        }
+        if ($user_role == 'store') {
+            $store = Store::where('store_code','=',$user->place_code)->first();
+            $store->delete();
+        }
+        if ($user_role == 'warranty_center') {
+            $warranty_center = Warranty_Center::where('warranty_center_code','=',$user->place_code)->first();
+            $warranty_center->delete();
+        }
+        $user->delete();
+        return response()->json([
+            'message' => 'delete success',
+            'deleted user' => $user,
+        ]);
+    }
+
+    public function update_account(Request $request) {
+        // request gom username, password, place_name, place_code, address
+        $user = User::where('place_code','=',$request->place_code)->first();
+        $user->username = $request->username;
+        $user->password = bcrypt($request->password);
+        $user_role = $user->user_role;
+        if ($user_role == 'factory') {
+            $factory = Factory::where('factory_code','=',$user->place_code)->first();
+            $factory->factory_name = $request->place_name;
+            $factory->address = $request->address;
+            $factory->save();
+        }
+        if ($user_role == 'store') {
+            $store = Store::where('store_code','=',$user->place_code)->first();
+            $store->store_name = $request->place_name;
+            $store->address = $request->address;
+            $store->save();
+        }
+        if ($user_role == 'warranty_center') {
+            $warranty_center = Warranty_Center::where('warranty_center_code','=',$user->place_code)->first();
+            $warranty_center->warranty_center_name = $request->place_name;
+            $warranty_center->address = $request->address;
+            $warranty_center->save();
+        }
+        
+
+        $user->save();
+        return response()->json([
+            'message' => 'user updated',
+            'updated user' => $user
+        ]);
+    }
     
     // Xem danh sách các nhà máy
     public function view_factories() {

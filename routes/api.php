@@ -39,7 +39,8 @@ Route::get('admin/view_products_by_factory', [ProductController::class, 'view_pr
 Route::get('admin/view_products_by_store', [ProductController::class,'view_products_by_store']);
 Route::get('admin/view_products_by_warranty', [ProductController::class, 'view_products_by_warranty']);
 Route::post('admin/add_product_line', [AdminController::class, 'add_product_line']);
-
+Route::post('admin/delete_account',[AdminController::class,'delete_account']);
+Route::post('admin/update_account', [AdminController::class, 'update_account']);
 // route chức năng của factory
 
 // them san pham

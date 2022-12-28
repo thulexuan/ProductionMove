@@ -13,6 +13,9 @@ class Factory extends Model
 {
     use HasApiTokens, HasFactory, Notifiable;
     protected $table = 'factories';
+    public $incrementing = false;
+    protected $keyType = 'string';
+    protected $primaryKey = 'factory_code';
     
     
     
