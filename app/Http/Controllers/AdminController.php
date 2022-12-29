@@ -113,6 +113,7 @@ class AdminController extends Controller
         ]);
     }
     
+
     // Xem danh sách các nhà máy
     public function view_factories() {
         // sử dụng bảng factories
