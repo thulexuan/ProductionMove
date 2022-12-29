@@ -44,7 +44,7 @@ class ProductController extends Controller
             }
             if ($status == "đang bảo hành" || $status == "lỗi cần trả về nhà máy") {
             $place_at = "Đang ở trung tâm bảo hành";
-            $place_name = Store::where('warranty_center_code','=', $product->warranty_center_code)->first()->warranty_center_name;
+            $place_name = Warranty_Center::where('warranty_center_code','=', $product->warranty_center_code)->first()->warranty_center_name;
             }
             if ($status == "đã bán" || $status == "đã trả lại bảo hành") {
             $place_at = "Đang ở khách hàng";

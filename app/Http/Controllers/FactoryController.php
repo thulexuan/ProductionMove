@@ -133,39 +133,45 @@ class FactoryController extends Controller
 
         $result = array();
         $num_all = $products_sold_factory->count();
-        
-        for ($month = 1; $month <= 12; $month++) {
-            foreach ($products_sold_factory as $product_sold_factory) {
+        if ($num_all == 0) {
+            return response()->json([
+                'message' => 'no product sold',
+            ]);
+        } else {
+            for ($month = 1; $month <= 12; $month++) {
+                //foreach ($products_sold_factory as $product_sold_factory) {
+                
+                    $num_of_products = ProductSoldFactory::whereMonth('sold_date','=', $month)->get()->count();
+                    array_push($result, [
+                        'month' => $month,
+                        'num_of_products' => $num_of_products,
+                        'ratio' => $num_of_products*100/$num_all,
+                    ]);
+                //} 
+            }
             
-                $num_of_products = ProductSoldFactory::whereMonth('sold_date','=', $month)->get()->count();
-                array_push($result, [
-                    'month' => $month,
-                    'num_of_products' => $num_of_products,
-                    'ratio' => $num_of_products*100/$num_all,
-                ]);
-            } 
+            array_push($result, [
+                'all_sold_products' => $num_all,
+            ]);
+            $max_ratio = 0;
+            $max_month = array();
+            for ($i=0;$i<count($result)-1;$i++) {
+                if ($result[$i]['ratio'] > $max_ratio) {
+                    $max_ratio = $result[$i]['ratio'];
+                }
+            }
+            for ($i=0;$i<count($result)-1;$i++) {
+                if ($result[$i]['ratio'] == $max_ratio) {
+                    array_push($max_month,$result[$i]['month']);
+                }
+            }
+            array_push($result, [
+                'month_sold_max' => $max_month,
+            ]);
+            
+            return response()->json($result);
         }
         
-        array_push($result, [
-            'All sold products' => $num_all,
-        ]);
-        $max_ratio = 0;
-        $max_month = array();
-        for ($i=0;$i<count($result)-1;$i++) {
-            if ($result[$i]['ratio'] > $max_ratio) {
-                $max_ratio = $result[$i]['ratio'];
-            }
-        }
-        for ($i=0;$i<count($result)-1;$i++) {
-            if ($result[$i]['ratio'] == $max_ratio) {
-                array_push($max_month,$result[$i]['month']);
-            }
-        }
-        array_push($result, [
-            'Month sold max' => $max_month,
-        ]);
-        
-        return response()->json($result);
     }
 
     // thống kê sản phẩm lỗi theo dòng sản phẩm và tìm ra dòng sản phẩm lỗi nhiều nhất
@@ -202,7 +208,7 @@ class FactoryController extends Controller
             'num_failed_products' => count($failed_products),
         ],
         [
-            'productline failed max' => $max_product_lines,
+            'productline_failed_max' => $max_product_lines,
         ]);
 
             return response()->json($result);

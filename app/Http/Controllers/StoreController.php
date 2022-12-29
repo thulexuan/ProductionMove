@@ -144,14 +144,15 @@ class StoreController extends Controller
             ]);
         } else {
             for ($month = 1; $month <= 12; $month++) {
-                foreach ($sold_products as $sold_product) {
-                    $num_of_products = Order::whereMonth('orderDate','=',$month)->get()->count();
+                //foreach ($sold_products as $sold_product) {
+                    $num_of_products = Order::where('store_code','=',$store_code)
+                    ->whereYear('orderDate','=',$year)->whereMonth('orderDate','=',$month)->get()->count();
                     array_push($result, [
                         'month' => $month,
                         'num_of_sold_products' => $num_of_products,
                         'ratio' => $num_of_products*100/$num_sold,
                     ]);
-                } 
+                // } 
             }
             $max_ratio = 0;
             $max_month = array();
@@ -167,11 +168,11 @@ class StoreController extends Controller
                 }
             }
             array_push($result, [
-                'Month sold max' => $max_month,
+                'month_sold_max' => $max_month,
             ]);
             
             array_push($result, [
-                'All sold products' => $num_sold,
+                'all_sold_products' => $num_sold,
             ]);
             
             return response()->json($result);
