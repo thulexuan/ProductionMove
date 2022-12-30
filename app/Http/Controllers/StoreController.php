@@ -139,9 +139,25 @@ class StoreController extends Controller
         $result = array();
         $num_sold = count($sold_products);
         if ($num_sold == 0) {
-            return response()->json([
-                'message' => 'No product sold',
+            for ($month = 1; $month <= 12; $month++) {
+                    array_push($result, [
+                        'month' => $month,
+                        'num_of_sold_products' => 0,
+                        'ratio' => 0,
+                    ]);
+               
+                }
+            $max_month = array();
+            
+            array_push($result, [
+                'month_sold_max' => $max_month,
             ]);
+            
+            array_push($result, [
+                'all_sold_products' => $num_sold,
+            ]);
+            
+            return response()->json($result);
         } else {
             for ($month = 1; $month <= 12; $month++) {
                 //foreach ($sold_products as $sold_product) {

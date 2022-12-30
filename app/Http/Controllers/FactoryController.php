@@ -134,9 +134,28 @@ class FactoryController extends Controller
         $result = array();
         $num_all = $products_sold_factory->count();
         if ($num_all == 0) {
-            return response()->json([
-                'message' => 'no product sold',
+            for ($month = 1; $month <= 12; $month++) {    
+                    array_push($result, [
+                        'month' => $month,
+                        'num_of_products' => 0,
+                        'ratio' => 0,
+                    ]);
+            }
+            
+            array_push($result, [
+                'all_sold_products' => 0,
             ]);
+            
+            
+            $max_month = array();
+            
+            array_push($result, [
+                'month_sold_max' => $max_month,
+            ]);
+            
+            
+            
+            return response()->json($result);
         } else {
             for ($month = 1; $month <= 12; $month++) {
                 //foreach ($products_sold_factory as $product_sold_factory) {
